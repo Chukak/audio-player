@@ -18,14 +18,46 @@ ApplicationWindow
         id: audioPlayer
     }
 
+    Item 
+    {
+        id: listAudioArea
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: playerContronsButtonArea.bottom
+        width: 300     
+
+        Components.ListAudio 
+        {
+            id: listAudio
+        }
+    }
+
+    Item 
+    {
+        id: playerContronsButtonArea
+        anchors.left: listAudioArea.right
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        width: parent.width - listAudioArea.width
+        height: 50
+        
+        Components.ControlsButtons 
+        {
+            id: playerContronsButton
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            width: parent.width
+            height: parent.height > 50 ? 50 : parent.height
+        }
+    }
+    
     ListAudioModels
     {
         id: listAudioModels
         Component.onCompleted: {
-            console.log(listAudioModels.at(0).getPath())
-            console.log(listAudioModels.at(0).getTitle())
-            audioPlayer.source = listAudioModels.at(0).getPath()
-            audioPlayer.play()
+            listAudio.listModels = listAudioModels
+            listAudio.filled()
         }
     }
 }
