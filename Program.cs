@@ -18,6 +18,7 @@ namespace audio_player
                 qmlEngine = new QQmlApplicationEngine();
                 Qml.Net.Qml.RegisterType<Models.AudioModel>("AudioModel", 0, 1);
                 Qml.Net.Qml.RegisterType<Models.ListAudioModels>("ListAudioModels", 0, 1);
+                Qml.Net.Qml.RegisterType<Models.IconModel>("IconModel", 0, 1);
                 qmlEngine.Load(Path.Combine(qmlFilesPath, "Main.qml"));
                 return true;
             }
