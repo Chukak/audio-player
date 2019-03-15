@@ -1,17 +1,20 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.12
 import "../../js/controls.js" as Scripts
 
 Rectangle 
 {
+    property QtObject iconModel: null
     property real savedSoundValue: 0.0
-    property int sizeButton: height - 10
+    property int sizeButton: height - 0
     signal playAudio
     signal pauseAudio
     signal stopAudio
+    signal setIcons
 
     id: controls
-     
+    
     anchors.leftMargin: 0
     anchors.rightMargin: 0
 
@@ -41,6 +44,12 @@ Rectangle
     {
         // todo
     }
+    onSetIcons:
+    {
+        playButtonIcon.source = iconModel.playButtonIcon()
+        stopButtonIcon.source = iconModel.stopButtonIcon()
+        soundButtonIcon.source = iconModel.soundButtonIcon()
+    }
 
     Item 
     {
@@ -48,6 +57,8 @@ Rectangle
         anchors.left: parent.left
         width: 80
         height: parent.height
+        anchors.topMargin: 3
+        anchors.bottomMargin: 3
 
         ToolButton 
         {
@@ -82,19 +93,29 @@ Rectangle
 
                     onEntered: 
                     {
-                        Scripts.mouseAreaEntered(playButtonBackground)
+                        if (playButton.playing) {
+                            playButtonIcon.source = iconModel.pauseButtonHoverIcon()
+                        } else {
+                            playButtonIcon.source = iconModel.playButtonHoverIcon()
+                        }
                     }
                     onExited: 
                     {
-                        Scripts.mouseAreaExited(playButtonBackground)
+                        if (playButton.playing) {
+                            playButtonIcon.source = iconModel.pauseButtonIcon()
+                        } else {
+                            playButtonIcon.source = iconModel.playButtonIcon()
+                        }
                     }
                     onClicked: 
                     {
                         if (audioPlayer.hasAudio || audioPlayer.hasVideo) {
                             if (playButton.playing) {
-                                // todo
+                                audioPlayer.pause()
+                                playButtonIcon.source = iconModel.playButtonIcon()
                             } else {
-                                // todo
+                                audioPlayer.play()
+                                playButtonIcon.source = iconModel.pauseButtonIcon()
                             }
                         }
                     }
@@ -108,7 +129,20 @@ Rectangle
                 fillMode: Image.PreserveAspectFit
                 mipmap: true
                 smooth: true
-                anchors.margins: 0
+                anchors.margins: 4
+                layer.enabled: true
+                layer.effect: OpacityMask {
+                    maskSource: maskPlayButtonIcon
+                }
+            }
+
+            Rectangle 
+            {
+                id: maskPlayButtonIcon
+                width: playButton.width
+                height: playButton.height
+                radius: 4
+                visible: false
             }
         }
         
@@ -137,11 +171,11 @@ Rectangle
 
                     onEntered: 
                     {
-                        Scripts.mouseAreaEntered(stopButtonBackground)
+                        stopButtonIcon.source = iconModel.stopButtonHoverIcon()
                     }
                     onExited: 
                     {
-                        Scripts.mouseAreaExited(stopButtonBackground)
+                        stopButtonIcon.source = iconModel.stopButtonIcon()
                     }
                     onClicked: 
                     {
@@ -160,7 +194,20 @@ Rectangle
                 fillMode: Image.PreserveAspectFit
                 mipmap: true
                 smooth: true
-                anchors.margins: 6
+                anchors.margins: 4
+                layer.enabled: true
+                layer.effect: OpacityMask {
+                    maskSource: maskStopButtonIcon
+                }
+            }
+
+            Rectangle 
+            {
+                id: maskStopButtonIcon
+                width: stopButton.width
+                height: stopButton.height
+                radius: 4
+                visible: false
             }
         }
     }
@@ -182,20 +229,20 @@ Rectangle
             handle: Rectangle 
             {
                 x: sliderDurationAudio.visualPosition * (sliderDurationAudio.width - width)
-                y: (sliderDurationAudio.height - height) / 2
+                y: (sliderDurationAudio.height - height + 10) / 2
                 color: "#fff"
-                width: 20
-                height: 20
+                width: 24
+                height: 24
                 radius: width * 0.5
                 border.color: "#2997e5"//"#8f8f8f"
             }
 
             background: Rectangle 
             {
-                y: (sliderDurationAudio.height - height) / 2
-                height: 10
+                y: (sliderDurationAudio.height - height + 10) / 2
+                height: 12
                 color: "#f2f2f2" //"#f2f2f2"
-                radius: 20
+                radius: 24
                 border.color: "#2997e5"
 
                 Rectangle 
@@ -324,7 +371,7 @@ Rectangle
             handle: Rectangle 
             {
                 x: soundSlider.visualPosition * (soundSlider.width - width)
-                y: (soundSlider.height - height) / 2
+                y: (soundSlider.height - height + 10) / 2 
                 color: "#fff"
                 width: 20
                 height: 20
@@ -334,7 +381,7 @@ Rectangle
 
             background: Rectangle 
             {
-                y: (soundSlider.height - height) / 2
+                y: (soundSlider.height - height + 10) / 2
                 height: 8
                 color: "#f1f1f1"
                 radius: 50
@@ -398,11 +445,11 @@ Rectangle
 
             onMuted: 
             {
-                // todo
+                soundButtonIcon.source = iconModel.mutedSoundButtonIcon()
             }
             onRaise: 
             {
-                // todo
+                soundButtonIcon.source = iconModel.soundButtonIcon()
             }
 
             background: Item 
@@ -423,22 +470,30 @@ Rectangle
 
                     onEntered: 
                     {
-                        Scripts.mouseAreaEntered(soundButtonBackground)
+                        if (soundSlider.value === 0.0) {
+                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
+                        } else {
+                            soundButtonIcon.source = iconModel.soundButtonHoverIcon()
+                        }
                     }
                     onExited: 
                     {
-                        Scripts.mouseAreaExited(soundButtonBackground)
+                        if (soundSlider.value === 0.0) {
+                            soundButtonIcon.source = iconModel.mutedSoundButtonIcon()
+                        } else {
+                            soundButtonIcon.source = iconModel.soundButtonIcon() 
+                        }
                     }
                     onClicked: 
                     {
                         if (savedSoundValue === 0.0) {
                             savedSoundValue = soundSlider.value
                             soundSlider.value = 0.0
-                            // todo
+                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
                         } else {
                             soundSlider.value = savedSoundValue
                             savedSoundValue = 0.0
-                            // todo
+                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
                         }
                     }
                 }
@@ -451,7 +506,20 @@ Rectangle
                 fillMode: Image.PreserveAspectFit
                 mipmap: true
                 smooth: true
-                anchors.margins: 6
+                anchors.margins: 4
+                layer.enabled: true
+                layer.effect: OpacityMask {
+                    maskSource: maskSoundButtonIcon
+                }
+            }
+
+            Rectangle 
+            {
+                id: maskSoundButtonIcon
+                width: soundButton.width
+                height: soundButton.height
+                radius: 4
+                visible: false
             }
         }
     }
