@@ -17,3 +17,8 @@ dotnet add package Qml.Net.LinuxBinaries
 ```
 
 Vieocard driver: <strong>Nvidia-390</strong> 
+
+To install Taglib package:
+```bash
+dotnet add package taglib --version 2.1.0	
+```
