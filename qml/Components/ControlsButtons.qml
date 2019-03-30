@@ -449,7 +449,8 @@ Rectangle
             }
             onRaise: 
             {
-                soundButtonIcon.source = iconModel.soundButtonIcon()
+                if (iconModel != null)
+                    soundButtonIcon.source = iconModel.soundButtonIcon()
             }
 
             background: Item 
