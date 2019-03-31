@@ -31,6 +31,8 @@ ApplicationWindow
         {
             playerControlsButton.iconModel = iconModel
             playerControlsButton.setIcons()
+            listAudio.iconModel = iconModel
+            listAudio.setIcons()
         }
     }
 
