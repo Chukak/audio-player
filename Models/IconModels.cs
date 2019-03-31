@@ -16,7 +16,9 @@ namespace audio_player.Models
         private static readonly string soundButtonHoverIconName = "sound-button-hover.png";
         private static readonly string mutedSoundButtonIconName = "muted-sound-button.png";
         private static readonly string mutedSoundButtonHoverIconName = "muted-sound-button-hover.png";
-
+        private static readonly string addTrackButtonIconName = "add-track-button.png";
+        private static readonly string addTrackButtonHoverIconName = "add-track-button-hover.png";
+ 
         private  readonly string playButton = Path.Combine(iconsPath, playButtonIconName);
         private  readonly string playButtonHover = Path.Combine(iconsPath, playButtonHoverIconName);
         private  readonly string pauseButton = Path.Combine(iconsPath, pauseButtonIconName);
@@ -27,6 +29,8 @@ namespace audio_player.Models
         private  readonly string soundButtonHover = Path.Combine(iconsPath, soundButtonHoverIconName);
         private  readonly string mutedSoundButton = Path.Combine(iconsPath, mutedSoundButtonIconName);
         private  readonly string mutedSoundButtonHover = Path.Combine(iconsPath, mutedSoundButtonHoverIconName);
+        private  readonly string addTrackButton = Path.Combine(iconsPath, addTrackButtonIconName);
+        private  readonly string addTrackButtonHover = Path.Combine(iconsPath, addTrackButtonHoverIconName);
 
         public string playButtonIcon() => playButton;
         public string playButtonHoverIcon() => playButtonHover;
@@ -38,6 +42,8 @@ namespace audio_player.Models
         public string soundButtonHoverIcon() => soundButtonHover;
         public string mutedSoundButtonIcon() => mutedSoundButton;
         public string mutedSoundButtonHoverIcon() => mutedSoundButtonHover;
+        public string addTrackButtonIcon() => addTrackButton;
+        public string addTrackButtonHoverIcon() => addTrackButtonHover;
         
 
     }
