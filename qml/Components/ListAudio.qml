@@ -10,7 +10,9 @@ Rectangle
     property int mainHeight: parent.height
     property QtObject listModels: null
     property QtObject iconModel: null
+    property var previousItems: [ null, null, null, null ]
     property double itemHeight: 50
+    property int selectedIndex: -1
     signal filled
     signal setIcons
     
@@ -183,6 +185,7 @@ Rectangle
             anchors.topMargin: itemHeight
             delegate: itemDelegateId
             highlightFollowsCurrentItem: false
+            cacheBuffer: 5000 // max 1000 delegates with 50px height
             ScrollBar.vertical: ScrollBar 
             {
                 interactive: false
@@ -191,13 +194,13 @@ Rectangle
             }
         }
 
-
-        Component 
+        Component
         {
             id: itemDelegateId
 
             Rectangle 
             {
+                id: itemDelegateArea
                 height: itemHeight
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -325,12 +328,33 @@ Rectangle
                     }
                     onExited:
                     {
-                        gradient = gradientItemDelegate
-                        songName.color = durationName.color = singerName.color = "#f1f1f1"
+                        if (selectedIndex != index) {
+                            gradient = gradientItemDelegate
+                            songName.color = durationName.color = singerName.color = "#f1f1f1"
+                        } else {
+                            gradient = gradientHoverItemDelegate
+                            songName.color = durationName.color = singerName.color = "#2997e5"
+                        }
                     }
                     onClicked: 
                     {
+                        if (selectedIndex != -1 && selectedIndex != index) {
+                            previousItems[0].gradient = gradientItemDelegate
+                            for (var i = 1; i < 4; ++i) {
+                                previousItems[i].color = "#f1f1f1"
+                            } 
+                        }
 
+                        previousItems[0] = parent // delegate
+                        previousItems[1] = songName // Text
+                        previousItems[2] = singerName // Text
+                        previousItems[3] = durationName // Text
+                        
+                        selectedIndex = index
+                        gradient = gradientHoverItemDelegate
+                        songName.color = durationName.color = singerName.color = "#2997e5"
+                        audioPlayer.source = modelData.getPath()
+                        audioPlayer.play()
                     }
                 }
             }
@@ -340,6 +364,5 @@ Rectangle
     onFilled: 
     {
         listViewModel.model = Net.toListModel(listModels.audioModels())
-        console.log(listViewModel.height)
     }
 }
