@@ -28,7 +28,14 @@ namespace audio_player
         // only for debug
         static void TempInitAudioModels()
         {
-            Models.ListAudioModels.AddAudioModel(new Models.AudioModel("Die hard 1", "/home/elliot/Загрузки/Крепкий орешек 1 - Die Hard 1 (1988) BDRip 10802p.mkv"));
+            string homePath;
+            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX) {
+                homePath = Environment.GetEnvironmentVariable("HOME");
+            } else {
+                homePath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            }
+            // only example
+            Models.ListAudioModels.AddAudioModel(new Models.AudioModel(String.Format("{0}/sound/3. Aliotta Haynes Jeremiah - Lake Shore Drive.mp3", homePath)));
         }
 
         static int Main(string[] args)
