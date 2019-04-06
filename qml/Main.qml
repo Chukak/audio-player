@@ -39,6 +39,19 @@ ApplicationWindow
     Components.Audio
     {
         id: audioPlayer
+
+        onPlaying:
+        {
+            playerControlsButton.playAudio()
+        }
+        onPaused:
+        {
+            playerControlsButton.pauseAudio()
+        }
+        onStopped:
+        {
+            playerControlsButton.stopAudio()
+        }
     }
 
     Item 
