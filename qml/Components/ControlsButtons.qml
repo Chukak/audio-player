@@ -22,27 +22,29 @@ Rectangle
     {
         GradientStop
         {
-            color: "#40403E" // "#f3f3f3" 51524F
+            color: "#40403E"
             position: 0.0
         }
         GradientStop
         {
-            color: "#2E2E2D" // "#f3f3f3" 
+            color: "#2E2E2D" 
             position: 1.0
         }
     }
 
     onPlayAudio: 
     {
-        // todo
+        playButton.playing = true
+        playButtonIcon.source = iconModel.pauseButtonIcon()
     }
     onPauseAudio: 
     {
-        // todo
+        playButton.playing = false
     }
     onStopAudio:
     {
-        // todo
+        playButton.playing = false
+        playButtonIcon.source = iconModel.playButtonIcon()
     }
     onSetIcons:
     {
@@ -50,6 +52,7 @@ Rectangle
         stopButtonIcon.source = iconModel.stopButtonIcon()
         soundButtonIcon.source = iconModel.soundButtonIcon()
     }
+
 
     Item 
     {
@@ -63,17 +66,11 @@ Rectangle
         ToolButton 
         {
             property bool playing: false
-            signal stop
             
             id: playButton
             anchors.left: parent.left
             width: sizeButton
             height: sizeButton
-
-            onStop: 
-            {
-                // todo: icon button
-            }
 
             background: Item 
             {
@@ -112,10 +109,10 @@ Rectangle
                         if (audioPlayer.hasAudio || audioPlayer.hasVideo) {
                             if (playButton.playing) {
                                 audioPlayer.pause()
-                                playButtonIcon.source = iconModel.playButtonIcon()
-                            } else {
+                                playButtonIcon.source = iconModel.playButtonHoverIcon()
+                            } else {                              
                                 audioPlayer.play()
-                                playButtonIcon.source = iconModel.pauseButtonIcon()
+                                playButtonIcon.source = iconModel.pauseButtonHoverIcon()
                             }
                         }
                     }
@@ -180,7 +177,7 @@ Rectangle
                     onClicked: 
                     {
                         if (audioPlayer.hasAudio || audioPlayer.hasVideo) {
-                            // todo
+                            audioPlayer.stop()
                         }
                     }
                     
@@ -214,9 +211,43 @@ Rectangle
 
     Item 
     {
-        id: durationItem
+        id: currentDurationLabelItem
         anchors.left: controlsItem.right
-        anchors.right: durationLabelItem.left
+        anchors.bottom: parent.bottom
+        width: 60
+        height: parent.height
+        anchors.bottomMargin: 2
+
+        Item 
+        {
+            id: currentDuration
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.topMargin: sizeButton / 2 - 7
+
+            Label 
+            {
+                id: labelDurationCurrent
+                color: "#f1f1f1"
+                text: Scripts.leftJustified(audioPlayer.position / 1000) 
+                anchors.left: parent.left
+                anchors.leftMargin: 6
+                width: 50
+                font.bold: true
+                font.pointSize: 10
+                horizontalAlignment: Text.AlignRight
+                height: 10 
+            }
+        }
+    }
+
+    Item 
+    {
+        id: durationItem
+        anchors.left: currentDurationLabelItem.right
+        anchors.right: totalDurationLabelItem.left
         anchors.bottom: parent.bottom
         height: parent.height
 
@@ -230,70 +261,60 @@ Rectangle
             {
                 x: sliderDurationAudio.visualPosition * (sliderDurationAudio.width - width)
                 y: (sliderDurationAudio.height - height + 10) / 2
-                color: "#fff"
                 width: 24
                 height: 24
                 radius: width * 0.5
-                border.color: "#2997e5"//"#8f8f8f"
+                border.color: "#2997e5"
+
+                gradient: Gradient 
+                {
+                    GradientStop 
+                    {
+                        position: 0.0
+                        color: "#6DC3FF"
+                    }
+                    GradientStop
+                    {
+                        position: 1.0
+                        color: "#2997e5"
+                    }
+                }
             }
 
             background: Rectangle 
             {
                 y: (sliderDurationAudio.height - height + 10) / 2
                 height: 12
-                color: "#f2f2f2" //"#f2f2f2"
+                color: "#f2f2f2"
                 radius: 24
                 border.color: "#2997e5"
-
-                Rectangle 
-                {
-                    y: sliderDurationAudio.vidualPosition * parent.width
-                    height: parent.height
-                    color: "#f2f2f2"
-                    border.color: "#f1f1f1"//"#8f8f8f"
-
-                    gradient: Gradient 
-                    {
-                        GradientStop 
-                        {
-                            position: 0.0
-                            color: "#6DC3FF"
-                        }
-                        GradientStop
-                        {
-                            position: 1.0
-                            color: "#2997e5"
-                        }
-                    }
-                }
             }
 
             height: parent.height - 10
             anchors.leftMargin: 5
             anchors.rightMargin: 5
             from: 0
-            to: audioPlayer.duration
-            value: audioPlayer.position
+            to: audioPlayer.duration 
+            value: audioPlayer.position 
             onMoved: 
             {
                 audioPlayer.seek(value)
             }
         }
-        
     }
 
     Item 
     {
-        id: durationLabelItem
+        id: totalDurationLabelItem
         anchors.right: soundItem.left
         anchors.bottom: parent.bottom
-        width: 130
+        width: 60
         height: parent.height
         anchors.bottomMargin: 2
 
         Item 
         {
-            id:labelsDuration
+            id: totalDuration
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.right: parent.right
@@ -302,44 +323,12 @@ Rectangle
 
             Label 
             {
-                id: labelDurationCurrent
-                color: "#f1f1f1"
-                text: "00:00:00" //"<font color=\"white\">00:00:00</font>" // todo
-                anchors.left: parent.left
-                anchors.leftMargin: 6
-                width: 50
-                font.bold: true
-                font.pointSize: 10
-                horizontalAlignment: Text.AlignRight
-                height: 10 
-                onTextChanged: 
-                {
-                    width = text.length * 6 + 2
-                }
-            }
-
-            Label 
-            {
-                id: labelDurationSeparator
-                color: "#f1f1f1"
-                text: "/"
-                anchors.left: labelDurationCurrent.right
-                anchors.leftMargin: 0
-                width: 10
-                font.bold: true
-                font.pointSize: 10
-                horizontalAlignment: Text.AlignRight
-                height: 10 
-            }
-
-            Label 
-            {
                 id: labelDurationFull
                 color: "#f1f1f1"
-                text: "10:00:00"
+                text: Scripts.leftJustified(audioPlayer.duration / 1000)
                 width: 50
-                anchors.left: labelDurationSeparator.right
-                anchors.leftMargin: 2
+                anchors.right: parent.right
+                anchors.rightMargin: 2
                 font.bold: true
                 font.pointSize: 10
                 height: 10 
@@ -376,7 +365,7 @@ Rectangle
                 width: 20
                 height: 20
                 radius: width * 0.5
-                border.color: "#2997e5"//"#8f8f8f"
+                border.color: "#2997e5"
             }
 
             background: Rectangle 
@@ -392,7 +381,7 @@ Rectangle
                     width: soundSlider.visualPosition * parent.width
                     height: parent.height
                     radius: 50
-                    border.color: "#f1f1f1"//"#8f8f8f"
+                    border.color: "#f1f1f1"
 
                     gradient: Gradient 
                     {
