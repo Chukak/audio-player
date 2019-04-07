@@ -54,6 +54,11 @@ ApplicationWindow
         }
     }
 
+    Components.AudioFilesDialog
+    {
+        id: audioFileDialog
+    }
+
     Item 
     {
         id: listAudioArea
