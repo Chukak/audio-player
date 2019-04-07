@@ -15,6 +15,7 @@ Rectangle
     property int selectedIndex: -1
     signal filled
     signal setIcons
+    signal addAudio
     
     id: listAudioModels
     anchors.left: parent.left
@@ -26,6 +27,12 @@ Rectangle
     onSetIcons:
     {
         addTrackIcon.source = iconModel.addTrackButtonIcon()
+    }
+    onAddAudio:
+    {
+        // TODO: better replace to .append()
+        listViewModel.model = Net.toListModel(listModels.audioModels())
+        listViewModel.currentIndex = listViewModel.count - 1
     }
 
     Gradient 
@@ -85,6 +92,11 @@ Rectangle
                     parent.gradient = gradientItemDelegate
                     addTracKText.color = "#f1f1f1"
                     addTrackIcon.source = iconModel.addTrackButtonIcon()
+                }
+                onClicked:
+                {
+                    audioFileDialog.selectExisting = true
+                    audioFileDialog.open();
                 }
             }
 
@@ -184,7 +196,9 @@ Rectangle
             anchors.fill: parent
             anchors.topMargin: itemHeight
             delegate: itemDelegateId
-            highlightFollowsCurrentItem: false
+            highlightFollowsCurrentItem: true
+            highlightMoveDuration: 1000
+            highlightMoveVelocity: -1
             cacheBuffer: 5000 // max 1000 delegates with 50px height
             ScrollBar.vertical: ScrollBar 
             {
