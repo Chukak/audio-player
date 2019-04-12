@@ -231,11 +231,14 @@ Rectangle
                         Rectangle 
                         {
                             id: signerNameArea
-                            width: mainWidth - mainWidth / 3
+                            width: mainWidth - durationNameArea.width - 15 // ~214px
                             height: itemHeight / 2 - 7 // 18 px
                             Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                            Layout.maximumWidth: width
+                            Layout.fillWidth: false
                             anchors.margins: 2
                             color: "transparent"
+                            layer.enabled: true
 
                             Text 
                             {
@@ -245,8 +248,7 @@ Rectangle
                                 anchors.rightMargin: 1.5
                                 horizontalAlignment: Text.AlignLeft
                                 wrapMode: Text.NoWrap
-                                clip: true
-                                elide: Text.ElideRight
+                                textFormat: Text.PlainText
                                 color: "#f1f1f1"
                                 text: modelData.getSingerName()
                                 font 
@@ -256,24 +258,64 @@ Rectangle
                                     pixelSize: 16; 
                                     capitalization: Font.SmallCaps
                                 }
+
+                                TextMetrics 
+                                {
+                                    id: singerNameTextMetrics
+                                    font: singerName.font
+                                    text: singerName.text
+                                    elideWidth: parent.width
+                                }
+
+                                NumberAnimation on x
+                                {
+                                    property bool forward: false 
+                                    id: animateSingerName
+                                    from: -1 * (singerNameTextMetrics.boundingRect.width - singerName.width)
+                                    to: 0
+                                    loops: singerName.width < singerNameTextMetrics.boundingRect.width ? 1 : 0
+                                    duration: 5000
+
+                                    onFinished:
+                                    {
+                                        from = forward ? -1 * (singerNameTextMetrics.boundingRect.width - singerName.width) : 0 
+                                        to = !forward ? -1 * (singerNameTextMetrics.boundingRect.width - singerName.width) : 0
+                                        forward = !forward
+                                        pauseAnimateSingerName.start()
+                                    }
+                                }
+
+                                PauseAnimation 
+                                {
+                                    id: pauseAnimateSingerName
+                                    duration: 3000
+
+                                    onFinished: 
+                                    {
+                                        animateSingerName.start()
+                                    }
+                                }
                             }
                         }
 
                         Rectangle 
                         {
                             id: durationNameArea
-                            width: mainWidth - mainWidth / 3 * 2
+                            width: durationNameTextMetrics.width + 15 // ~71px
                             height: itemHeight / 2 - 7 // 18px
-                            Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                            anchors.margins: 2
+                            Layout.alignment: Qt.AlignRight 
+                            anchors.topMargin: 2
+                            anchors.bottomMargin: 2
+                            anchors.rightMargin: 2
+                            anchors.leftMargin: 6
                             color: "transparent"
 
                             Text 
                             {
                                 id: durationName
-                                width: parent.width - 15
+                                width: parent.width
                                 anchors.leftMargin: 1.5
-                                anchors.rightMargin: 13.5 // scrollbar pixel
+                                anchors.rightMargin: 1.5 // scrollbar pixel
                                 horizontalAlignment: Text.AlignRight
                                 wrapMode: Text.NoWrap
                                 clip: true
@@ -287,6 +329,13 @@ Rectangle
                                     pixelSize: 16; 
                                     capitalization: Font.SmallCaps
                                 }
+
+                                TextMetrics 
+                                {
+                                    id: durationNameTextMetrics
+                                    font: durationName.font
+                                    text: durationName.text
+                                }
                             }
                         }
                     }
@@ -295,6 +344,7 @@ Rectangle
                     {
                         id: lowerLayoutId
                         Layout.alignment: Qt.AlignBottom
+                        layer.enabled: true
 
                         Rectangle 
                         {
@@ -302,18 +352,19 @@ Rectangle
                             width: mainWidth
                             height: itemHeight / 2 + 7 // 32 px
                             Layout.alignment: Qt.AlignCenter | Qt.AlignBottom
+                            Layout.maximumWidth: width
+                            Layout.fillWidth: false
                             anchors.margins: 2
                             color: "transparent"
-
-                            Text 
+                            
+                            Text
                             {
                                 id: songName
                                 width: parent.width - 6
                                 anchors.leftMargin: 1.5
                                 anchors.rightMargin: 4.5
                                 wrapMode: Text.NoWrap
-                                clip: true
-                                elide: Text.ElideRight
+                                textFormat: Text.PlainText
                                 color: "#f1f1f1"
                                 text: modelData.getSongName()
                                 font 
@@ -322,6 +373,43 @@ Rectangle
                                     family: "Times"; 
                                     pixelSize: 18; 
                                     capitalization: Font.SmallCaps
+                                }
+
+                                TextMetrics 
+                                {
+                                    id: songNameTextMetrics
+                                    font: songName.font
+                                    text: songName.text
+                                    elideWidth: parent.width
+                                }
+
+                                NumberAnimation on x
+                                {
+                                    property bool forward: false 
+                                    id: animateSongName
+                                    from: -1 * (songNameTextMetrics.boundingRect.width - songName.width)
+                                    to: 0
+                                    loops: songName.width < songNameTextMetrics.boundingRect.width ? 1 : 0
+                                    duration: 5000
+
+                                    onFinished:
+                                    {
+                                        from = forward ? -1 * (songNameTextMetrics.boundingRect.width - songName.width) : 0 
+                                        to = !forward ? -1 * (songNameTextMetrics.boundingRect.width - songName.width) : 0
+                                        forward = !forward
+                                        pauseAnimateSongName.start()
+                                    }
+                                }
+
+                                PauseAnimation 
+                                {
+                                    id: pauseAnimateSongName
+                                    duration: 3000
+
+                                    onFinished: 
+                                    {
+                                        animateSongName.start()
+                                    }
                                 }
                             } 
                         }
