@@ -22,3 +22,13 @@ To install Taglib package:
 ```bash
 dotnet add package taglib --version 2.1.0	
 ```
+
+To install `GDip`:
+```bash
+sudo apt install libgdiplus
+```
+
+To add `System.Drawing`:
+```bash
+dotnet add package System.Drawing.Common
+``` 
