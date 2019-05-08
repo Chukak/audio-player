@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using TagLib;
 
 namespace audio_player.Models
@@ -13,6 +15,7 @@ namespace audio_player.Models
         private string singer;
         private string album;
         private string year = "----";
+        private string image;
         private bool valid = true;
         private readonly List<Exception> exceptions = new List<Exception>
         {
@@ -34,6 +37,7 @@ namespace audio_player.Models
                 setSinger(ref tgFile);
                 setAlbum(ref tgFile);
                 setYear(ref tgFile);
+                setImage(ref tgFile);
             } catch (Exception e) {
                 if (exceptions.Contains(e)) {
                     valid = false;
@@ -49,7 +53,10 @@ namespace audio_player.Models
         public string getSingerName() => singer;
         public string getAlbum() => album;
         public string getYear() => year;
+        public string getImage() => image;
         public bool isValid() => valid;
+        public bool hasYear() => year != "----";
+        public bool hasImage() => !string.IsNullOrEmpty(image) && !string.IsNullOrWhiteSpace(image);
 
         private void setName(ref TagLib.File tgFile)
         {
@@ -94,6 +101,14 @@ namespace audio_player.Models
         {
             if (tgFile.Tag.Year > 1900 && tgFile.Tag.Year <= DateTime.Now.Year) {
                 year = tgFile.Tag.Year.ToString();
+            }
+        }
+        private void setImage(ref TagLib.File tgFile)
+        {
+            if (tgFile.Tag.Pictures.Length > 0) {
+                image = Path.Combine(Resources.imagesDirectory, name);
+                var pixmap = Image.FromStream(new MemoryStream(tgFile.Tag.Pictures[0].Data.Data));
+                pixmap.Save(image, ImageFormat.Png);
             }
         }
     }
