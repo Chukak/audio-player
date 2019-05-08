@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Qml.Net" Version="0.7.0" />
     <PackageReference Include="Qml.Net.LinuxBinaries" Version="0.7.0" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="taglib" Version="2.1.0" />
   </ItemGroup>
 
