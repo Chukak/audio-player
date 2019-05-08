@@ -404,19 +404,15 @@ Rectangle
             to: 1.0
             value: audioPlayer.volume
 
-            onMoved: 
-            {
-                audioPlayer.volume = value
-            }
             onValueChanged: 
             {
+                audioPlayer.volume = value
                 if (value === 0 && soundButton.soundCurrentValue > 0.0) {
                     soundButton.muted()
                     audioPlayer.volume = 0.0
-                } else {
+                } else {                  
                     soundButton.raise()
                     soundButton.soundCurrentValue = value
-                    audioPlayer.volume = value
                 }
             }
         }
@@ -461,9 +457,9 @@ Rectangle
                     onEntered: 
                     {
                         if (soundSlider.value === 0.0) {
-                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
-                        } else {
                             soundButtonIcon.source = iconModel.soundButtonHoverIcon()
+                        } else {
+                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
                         }
                     }
                     onExited: 
@@ -479,7 +475,7 @@ Rectangle
                         if (savedSoundValue === 0.0) {
                             savedSoundValue = soundSlider.value
                             soundSlider.value = 0.0
-                            soundButtonIcon.source = iconModel.mutedSoundButtonHoverIcon()
+                            soundButtonIcon.source = iconModel.soundButtonHoverIcon()
                         } else {
                             soundSlider.value = savedSoundValue
                             savedSoundValue = 0.0
