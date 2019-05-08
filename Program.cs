@@ -4,8 +4,13 @@ using Qml.Net;
 
 namespace audio_player
 {
-    class Program
+    struct Resources
     {
+        public static readonly string imagesDirectory = Path.Combine(Directory.GetCurrentDirectory(), ".images");
+    }
+
+    class Program
+    {        
         private static QGuiApplication app;
         private static QQmlApplicationEngine qmlEngine;
         private static string qmlFilesPath;
@@ -25,26 +30,26 @@ namespace audio_player
             return false;
         }
 
-        // only for debug
-        static void TempInitAudioModels()
+        private static void initResources()
         {
-            string homePath;
-            if (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX) {
-                homePath = Environment.GetEnvironmentVariable("HOME");
-            } else {
-                homePath = Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+            clearResources();
+            Directory.CreateDirectory(Resources.imagesDirectory);
+        }
+
+        private static void clearResources()
+        {
+            if (Directory.Exists(Resources.imagesDirectory)) {
+                Directory.Delete(Resources.imagesDirectory, true);
             }
-            // only example
-            Models.ListAudioModels.AddAudioModel(new Models.AudioModel(String.Format("{0}/sound/3. Aliotta Haynes Jeremiah - Lake Shore Drive.mp3", homePath)));
         }
 
         static int Main(string[] args)
         {
-            // only for debug
-            TempInitAudioModels();
+            initResources();
             if (Init(ref args)) {
                 return app.Exec();
             }
+            clearResources();
             return 1;
         }
     }
