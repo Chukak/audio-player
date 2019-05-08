@@ -12,6 +12,8 @@ ApplicationWindow
     visible: true
     minimumWidth: 1024
     minimumHeight: 512
+    maximumWidth: 1024
+    maximumHeight: 512
     title: "Audio Player"
 
     ListAudioModels
@@ -33,6 +35,7 @@ ApplicationWindow
             playerControlsButton.setIcons()
             listAudio.iconModel = iconModel
             listAudio.setIcons()
+            audioInfo.iconModel = iconModel
         }
     }
 
@@ -64,12 +67,13 @@ ApplicationWindow
         id: listAudioArea
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: playerContronsButtonArea.bottom
+        anchors.bottom: parent.bottom
         width: 300     
 
         Components.ListAudio 
         {
             id: listAudio
+            audioInfoObject: audioInfo
         }
     }
 
@@ -79,8 +83,7 @@ ApplicationWindow
         anchors.left: listAudioArea.right
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        width: parent.width - listAudioArea.width
-        height: 50
+        height: 40
         
         Components.ControlsButtons 
         {
@@ -88,8 +91,22 @@ ApplicationWindow
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            width: parent.width
-            height: parent.height > 40 ? 40 : parent.height
+            height: parent.height
+        }
+    }
+
+    Item 
+    {
+        id: audioInfoArea
+        anchors.left: listAudioArea.right
+        anchors.right: parent.right
+        anchors.bottom: playerContronsButtonArea.top
+        anchors.top: parent.top
+
+        Components.AudioInfoArea
+        {
+            id: audioInfo
+            anchors.fill: parent
         }
     }
 }
