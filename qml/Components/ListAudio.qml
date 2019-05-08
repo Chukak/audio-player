@@ -10,6 +10,7 @@ Rectangle
     property int mainHeight: parent.height
     property QtObject listModels: null
     property QtObject iconModel: null
+    property QtObject audioInfoObject: null
     property var previousItems: [ null, null, null, null ]
     property double itemHeight: 50
     property int selectedIndex: -1
@@ -202,6 +203,7 @@ Rectangle
             cacheBuffer: 5000 // max 1000 delegates with 50px height
             ScrollBar.vertical: ScrollBar 
             {
+                policy: ScrollBar.AlwaysOn
                 interactive: false
                 stepSize: 0.1
                 size: 20
@@ -267,13 +269,14 @@ Rectangle
                                     elideWidth: parent.width
                                 }
 
-                                NumberAnimation on x
+                                XAnimator on x
                                 {
+                                    // TODO animation perfomance
                                     property bool forward: false 
                                     id: animateSingerName
                                     from: -1 * (singerNameTextMetrics.boundingRect.width - singerName.width)
                                     to: 0
-                                    loops: singerName.width < singerNameTextMetrics.boundingRect.width ? 1 : 0
+                                    loops: singerName.width < singerNameTextMetrics.boundingRect.width ? true : false
                                     duration: 5000
 
                                     onFinished:
@@ -382,8 +385,9 @@ Rectangle
                                     text: songName.text
                                     elideWidth: parent.width
                                 }
-
-                                NumberAnimation on x
+                                
+                                // TODO animation perfomance
+                                XAnimator on x
                                 {
                                     property bool forward: false 
                                     id: animateSongName
@@ -455,6 +459,7 @@ Rectangle
                         selectedIndex = index
                         gradient = gradientHoverItemDelegate
                         songName.color = durationName.color = singerName.color = "#2997e5"
+                        audioInfoObject.selected(modelData)
                         audioPlayer.source = modelData.getPath()
                         audioPlayer.play()
                     }
