@@ -32,3 +32,13 @@ To add `System.Drawing`:
 ```bash
 dotnet add package System.Drawing.Common
 ``` 
+
+Build on Unix:
+```bash
+./build.sh ubuntu.18.04-x64
+```
+
+Build on Win10 (Testing)
+```
+build win10-x64
+```
