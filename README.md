@@ -1,5 +1,9 @@
 # audio-player
 
+A simple audio-player written on QML, C#. 
+
+## Depedencies
+
 To install dotnet in Linux (Ubuntu 18.04)
 ```bash
 wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
@@ -16,7 +20,7 @@ dotnet add package Qml.Net
 dotnet add package Qml.Net.LinuxBinaries
 ```
 
-Vieocard driver: <strong>Nvidia-390</strong> 
+My videocard driver: <strong>Nvidia-390</strong> 
 
 To install Taglib package:
 ```bash
@@ -33,12 +37,18 @@ To add `System.Drawing`:
 dotnet add package System.Drawing.Common
 ``` 
 
+## Building
+
+This project may building on Windows, Linux using `dotnet`.
+
 Build on Unix:
 ```bash
 ./build.sh ubuntu.18.04-x64
 ```
 
-Build on Win10 (Testing)
+Build on Win10 (Not tested)
 ```
 build win10-x64
 ```
+
+Or just open `audio-player.csproj` in your IDE.

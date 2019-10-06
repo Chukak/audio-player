@@ -26,3 +26,20 @@ function leftJustified(number)
     }
     return result
 }
+
+// AudioInfoArea functions
+
+function startAnimation(width, mwidth)
+{
+    return width < mwidth ? 1 : 0
+}
+
+function restartAnimation(obj, width, mwidth, looped)
+{
+    obj.complete()
+    obj.forward = false
+    obj.from = 0//-1 * (mwidth - width)
+    obj.to = -1 * (mwidth - width)//0
+    obj.loops = startAnimation(width, mwidth)
+    obj.start()
+}
