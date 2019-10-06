@@ -2,6 +2,8 @@
 
 A simple audio-player written on QML, C#. 
 
+![audio-player](https://github.com/Chukak/audio-player/blob/master/audio-player.png)
+
 ## Depedencies
 
 To install dotnet in Linux (Ubuntu 18.04)
